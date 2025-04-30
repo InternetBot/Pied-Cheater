@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Copy/Paste & Proctoring Logger",
+  "version": "1.2",
+  "description": "Logs copy/paste, tab switches, typing, idle, mouse, focus, and more for AI-proctoring.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "downloads",
+    "scripting",
+    "idle",
+    "management",
+    "webNavigation"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

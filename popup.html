@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logger Control</title>
+  <style>
+    body { font-family: sans-serif; width: 220px; padding: 10px; text-align: center; }
+    button { padding: 8px 12px; font-size: 13px; cursor: pointer; width: 90%; margin: 8px 0; }
+    #status { font-weight: bold; margin-bottom: 8px; }
+    #messageArea { font-size: 12px; color: grey; min-height: 15px; }
+  </style>
+</head>
+<body>
+  <h4>Proctoring Logger</h4>
+  <div id="status">Loading...</div>
+  <button id="toggleButton">Start Tracking</button>
+  <button id="exportButton">Export Logs</button>
+  <div id="messageArea"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

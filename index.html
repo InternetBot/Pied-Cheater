@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pied Cheater Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+    }
+    .card {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    .card.hidden {
+      opacity: 0;
+      transform: scale(0.95);
+      position: absolute;
+      pointer-events: none;
+      display: none;
+    }
+    .card.active {
+      opacity: 1;
+      transform: scale(1);
+      display: block;
+    }
+    header h1 {
+      font-size: 2.2em;
+      color: #00796b;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    header p {
+      font-size: 1.1em;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    .upload-area {
+      border: 3px dashed #b2ebf2;
+      border-radius: 10px;
+      padding: 40px 20px;
+      background-color: #f8fdfd;
+      transition: background-color 0.3s ease;
+    }
+    .upload-area:hover {
+      background-color: #e0f7fa;
+    }
+    .upload-icon {
+      color: #00796b;
+      margin-bottom: 20px;
+    }
+    .file-hint {
+      font-size: 0.9em;
+      color: #777;
+      margin-top: 15px;
+    }
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    .btn-primary {
+      background-color: #00796b;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #004d40;
+    }
+    .btn-warning {
+      background-color: #ff9800;
+      color: white;
+    }
+    .btn-warning:hover {
+      background-color: #e68900;
+    }
+    .btn-secondary {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background-color: #bdbdbd;
+    }
+    .subtle {
+      font-size: 0.9em;
+      color: #888;
+      margin-top: 5px;
+    }
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #00796b;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .result-icon {
+      margin-bottom: 10px;
+    }
+    .appeal-text {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1em;
+      color: #555;
+    }
+    .success-text {
+      color: #2e7d32;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    #pie-animation-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+    #pie-animation-container.hidden {
+      display: none;
+    }
+    #pie-animation-container.active {
+      display: block;
+    }
+    #flying-pie {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-color: #e6b8af;
+      border: 10px solid #d2a679;
+      border-radius: 50%;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+    }
+    #flying-pie.throw {
+      animation: pie-throw 1.2s ease-out forwards;
+    }
+    @keyframes pie-throw {
+      0% {
+        top: 5%;
+        left: -100px;
+        transform: rotate(0deg) scale(0.8);
+        opacity: 1;
+      }
+      60% {
+        top: calc(50vh - 40px);
+        left: calc(50vw - 40px);
+        transform: rotate(480deg) scale(1.1);
+        opacity: 1;
+      }
+      80% {
+        transform: rotate(520deg) scale(1.0);
+        opacity: 1;
+      }
+      100% {
+        top: calc(50vh - 40px);
+        left: calc(50vw - 40px);
+        transform: rotate(540deg) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <section id="upload-section" class="card active">
+      <header>
+        <h1>Welcome to Pied Cheater</h1>
+        <p>Your assistant for reviewing academic activity logs. Let's ensure everything is in order.</p>
+      </header>
+      <div class="upload-area">
+        <i class="fas fa-cloud-upload-alt fa-3x upload-icon"></i>
+        <button id="upload-button" class="btn btn-primary">Click to Upload Your Log File</button>
+        <input type="file" id="file-input" accept=".log,.txt,.csv" hidden />
+        <p class="file-hint">Supports .log, .txt, .csv files</p>
+      </div>
+    </section>
+
+    <section id="processing-section" class="card hidden">
+      <div class="spinner"></div>
+      <h2>Analyzing Your File...</h2>
+      <p>Checking for inconsistencies & securing your submission.</p>
+      <p class="subtle">(This is a simulation)</p>
+    </section>
+
+    <section id="no-anomaly-section" class="card hidden">
+      <i class="fas fa-check-circle fa-3x result-icon"></i>
+      <h2>Looking Good! No Anomalies Detected.</h2>
+      <p>We've reviewed your uploaded log file, and everything appears consistent with standard activity patterns. Keep up the great work!</p>
+      <button onclick="resetApp()" class="btn btn-secondary">Upload Another File</button>
+    </section>
+
+    <section id="anomaly-section" class="card hidden">
+      <i class="fas fa-exclamation-triangle fa-3x result-icon"></i>
+      <h2>Potential Anomaly Detected.</h2>
+      <p>Our simulated analysis flagged potential irregularities in your log file that might warrant further review. This could be due to various factors.</p>
+      <div id="appeal-area">
+        <p class="appeal-text">If you believe this is an error or requires clarification, you can request a review from your professor.</p>
+        <button id="appeal-button" class="btn btn-warning">Appeal This Flag</button>
+      </div>
+      <div id="appeal-confirmation" class="hidden">
+        <p class="success-text"><i class="fas fa-paper-plane"></i> Your appeal request has been noted and conceptually forwarded to your professor.</p>
+        <button onclick="resetApp()" class="btn btn-secondary">Upload Another File</button>
+      </div>
+    </section>
+
+    <div id="pie-animation-container" class="hidden">
+      <div id="flying-pie"></div>
+    </div>
+  </div>
+
+  <script>
+    const uploadSection = document.getElementById('upload-section');
+    const processingSection = document.getElementById('processing-section');
+    const noAnomalySection = document.getElementById('no-anomaly-section');
+    const anomalySection = document.getElementById('anomaly-section');
+    const uploadButton = document.getElementById('upload-button');
+    const fileInput = document.getElementById('file-input');
+    const appealButton = document.getElementById('appeal-button');
+    const appealArea = document.getElementById('appeal-area');
+    const appealConfirmation = document.getElementById('appeal-confirmation');
+    const pieContainer = document.getElementById('pie-animation-container');
+    const flyingPie = document.getElementById('flying-pie');
+
+    uploadButton.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (event) => {
+      if (event.target.files.length > 0) {
+        startProcessing();
+      }
+    });
+
+    appealButton.addEventListener('click', () => {
+      hideSection(appealArea);
+      showSection(appealConfirmation);
+    });
+
+    function startProcessing() {
+      hideSection(uploadSection);
+      showSection(processingSection);
+      hidePieAnimation();
+      setTimeout(() => {
+        showRandomResult();
+        fileInput.value = null;
+      }, 2500);
+    }
+
+    function showRandomResult() {
+      hideSection(processingSection);
+
+      const isAnomaly = Math.random() < 0.5;
+
+      hideSection(noAnomalySection);
+      hideSection(anomalySection);
+      hideSection(appealConfirmation);
+      hidePieAnimation();
+
+      if (isAnomaly) {
+        showSection(anomalySection);
+        showSection(appealArea);
+        triggerPieAnimation();
+      } else {
+        showSection(noAnomalySection);
+      }
+    }
+
+    function triggerPieAnimation() {
+      pieContainer.classList.remove('hidden');
+      pieContainer.classList.add('active');
+      flyingPie.classList.add('throw');
+      setTimeout(hidePieAnimation, 1200);
+    }
+
+    function hidePieAnimation() {
+      flyingPie.classList.remove('throw');
+      pieContainer.classList.remove('active');
+      pieContainer.classList.add('hidden');
+    }
+
+    function resetApp() {
+      hideSection(noAnomalySection);
+      hideSection(anomalySection);
+      hideSection(appealConfirmation);
+      showSection(appealArea);
+      hidePieAnimation();
+      showSection(uploadSection);
+    }
+
+    function showSection(el) {
+      el?.classList.remove('hidden');
+      el?.classList.add('active');
+    }
+
+    function hideSection(el) {
+      el?.classList.remove('active');
+      el?.classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      hideSection(processingSection);
+      hideSection(noAnomalySection);
+      hideSection(anomalySection);
+      hidePieAnimation();
+      showSection(uploadSection);
+    });
+  </script>
+</body>
+</html>
